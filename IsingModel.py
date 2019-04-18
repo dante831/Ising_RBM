@@ -243,11 +243,11 @@ parser.add_argument("--steps",
                     help="Number of steps per epoch")
 parser.add_argument("--epochs", 
                     type=int,
-                    default=1000,
+                    default=1000, # 1000
                     help="Number of epochs")
 parser.add_argument("--burn_in", 
                     type=int,
-                    default=30,
+                    default=30, # 30
                     help="Number of burn-in epochs")
 parser.add_argument("--dT",
                     type=float,
@@ -304,8 +304,7 @@ Tmax = args.Tmax
 Tmin = args.Tmin
 plotM = args.plotM
 T_series = np.arange(Tmax, Tmin, -dT)
-h_series = np.arange(-0.4, 0.5, 0.1)
-
+h_series = np.array([-0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4])
 #
 # Geometry of plots for the model itself. For d=1, we plot one
 # bar per temperature. For d = 2, we plot one square per temperature
@@ -314,9 +313,9 @@ h_series = np.arange(-0.4, 0.5, 0.1)
 fig = plt.figure(figsize=(15,15))
 plot = 1
 oned_plots = len(T_series)
-twod_plots = len(T_series)
-twod_cols = int(1 / dT)
-twod_rows = int(twod_plots / twod_cols)
+twod_cols = len(T_series)
+twod_rows = len(h_series)
+twod_plots = twod_cols * twod_rows
 if (twod_rows * twod_cols < twod_plots):
     twod_rows += 1
 
@@ -358,7 +357,7 @@ for h in range(len(h_series)):
         if d == 1:
             ax = fig.add_subplot(oned_plots,1,plot)
         if d == 2:
-            ax = fig.add_subplot(twod_rows, twod_cols,plot)
+            ax = fig.add_subplot(twod_rows, twod_cols, plot)
         plot += 1
         ax.set_yticks([],[])
         ax.set_xticks([],[])
@@ -371,7 +370,7 @@ def save_obj(obj, obj_name, variable_name):
     v_path = obj_name + '/'+ variable_name + '.pkl'
     if os.path.exists(v_path):
         print('Warning: variable ' + variable_name + ' exists, overwritten')
-    with open(v_path, 'wb') as f:
+    with open(v_path, 'wb') as f: # open file for writing in binary mode, delete if exists
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 def load_obj(obj_name, variable_name):
     v_path = obj_name + '/'+ variable_name + '.pkl'
@@ -381,15 +380,22 @@ def load_obj(obj_name, variable_name):
 obj_name = '../spin_config'
 if not os.path.isdir(obj_name):
     os.mkdir(obj_name)
-for h in range(h_series):
-    save_obj(S_config, obj_name, 'S_config_h=' + str(h_series[h]))
-    save_obj(T_series, obj_name, 'T')
-S_config = load_obj(obj_name, 'S_config')
-T_series = load_obj(obj_name, 'T'       )
-# fig.tight_layout()
-tmp = tempfile.mktemp()
+for h in range(len(h_series)):
+    variable_name = 'S_config_h={:.2f}'.format(h_series[h])
+    save_obj(S_config[:, :, :, h], obj_name, variable_name)
+save_obj(T_series, obj_name, 'T_series')
+save_obj(h_series, obj_name, 'h_series')
+S_config_0 = load_obj(obj_name, 'S_config_h={:.2f}'.format(0))
+T_series = load_obj(obj_name, 'T_series')
+h_series = load_obj(obj_name, 'h_series')
+
+# save some figures
+figure_dir = obj_name + '/figures'
+os.mkdir(figure_dir)
+fig.tight_layout()
+tmp = tempfile.mktemp(dir = figure_dir)
 outfile = tmp + "_IsingPartI.png"
-print("Saving simulation results part I to ",outfile)
+print("Saving simulation results part I to ", outfile)
 fig.savefig(outfile)
 if args.show == 1:
     plt.show()

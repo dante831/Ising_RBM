@@ -153,12 +153,12 @@ if __name__ == '__main__':
         v_path = obj_name + '/'+ variable_name + '.pkl'
         with open(v_path, 'rb') as f:
             return pickle.load(f)
-    obj_name = './spin_config'
-    S_config = load_obj(obj_name, 'S_config')
-    T        = load_obj(obj_name, 'T'       )
+    obj_name = '../spin_config'
+    S_config_0 = load_obj(obj_name, 'S_config_h={:.2f}'.format(0))
+    T_series   = load_obj(obj_name, 'T_series')
     T_ind = 7
-    X = S_config[:, :, T_ind].T
-    T_ = T[T_ind]
+    X = S_config_0[:, :, T_ind].T
+    T_ = T_series[T_ind]
     #'''
 
     #divide data into training and validation sets

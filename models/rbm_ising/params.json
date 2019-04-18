@@ -11,7 +11,7 @@
     "epoch_": 200, 
     "hb_init": 0.0, 
     "initialized_": true, 
-    "iter_": 19400, 
+    "iter_": 200, 
     "json_params": {
         "indent": 4, 
         "sort_keys": true
