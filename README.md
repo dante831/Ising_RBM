@@ -2,9 +2,9 @@
 
 RBM learning for the Ising model. 
 
-This code suite samples from the Ising model and produce spin configurations at different temperatures of the Ising model. 
-Then, it fits the Restricted Boltzmann machine (RBM) to the spin configurations. The conclusion is that the parameters of the 
-RBM correponds directly to the temperature parameter of the Ising model. 
+This code suite samples from the Ising model and produce spin configurations at different temperatures and external field 
+strengths of the Ising model. Then, it fits the Restricted Boltzmann machine (RBM) to the spin configurations. The 
+conclusion is that the parameters of the RBM correponds directly to the temperature parameter of the Ising model. 
 
 The IsingModel.py file is forked from [christianb93](https://github.com/christianb93/MachineLearning/blob/master/IsingModel.py), 
 and the impementation of Restricted Boltzmann machine using Tensorflow is forked from 
